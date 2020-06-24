@@ -1,5 +1,5 @@
 # deepscholar-nlp
-deepscholarからのデータを取得と，自然言語処理によるテキストマイニングを実行するプログラム
+deepscholarからのデータ取得と，自然言語処理によるテキストマイニングを実行するプログラム
 
 ## 環境設定
 `config_sample.json`をコピーして`config.json`を作成し，以下の項目を環境に合わせて書き換える．
