@@ -42,17 +42,27 @@ $ python gen_conll.py config.json
 ```
 A	_	O	_
 s	S	O	_
-f	_	O	_
-e	_	O	_
+f	_	B-category	8040 relation
+e	_	I-category	_
+a	_	I-category	_
+t	_	I-category	_
+u	_	I-category	_
+r	_	I-category	_
+e	_	I-category	_
+d	S	E-category	_
+i	_	O	_
+n	_	O	_
+:	N	O	_
+S	_	O	_
 ```
 * 1列目: 文字
 * 2列目: 区切り文字
     * `S`: 直後にスペース文字がある
     * `N`: 直後に改行がある
     * `_`: それ以外
-* 3列目: スパンのBIOタグ
+* 3列目: スパンのBIOEタグ
 * 4列目: 親ノードのidとプロパティ（関係ラベル）
-    * 親ノードidは，親ノードのスパンの先頭文字を表す
+    * 上記の例だと，`featured`というスパンの親は，8040行目から始まるスパンで，関係ラベルは`relation`ということを表す．
 
 ## スパンアノテーションの学習
 Comming soon
