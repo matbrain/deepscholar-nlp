@@ -41,6 +41,7 @@ def main():
         else:
             ()
 
+    node_dict = {node['id']: node for node in nodes}
     for node in nodes:
         doc_id = node['documentId']
         if doc_id not in doc_dict:
@@ -55,7 +56,7 @@ def main():
             parent_id = node['parentId']
             property_id = node['propertyId']
         else:
-            parentid = None
+            parent_id = None
             property_id = None
 
         if 'annotation' in node:
@@ -69,10 +70,14 @@ def main():
                     doc[k][-2] = "I-" + cat
                 if start < end:
                     doc[end][-2] = "E-" + cat
+                if parent_id is not None:
+                    parent = node_dict[parent_id]
+                    parent_start = parent['annotation']['startIndex']
+                    prop = prop_dict[property_id]
+                    doc[start][-1] = f"{parent_start} {prop}"
 
     for doc_id, data in doc_dict.items():
         path = Path(work_dir) / f"{doc_id}.conll"
-        print(path)
         print(doc_id)
         with open(path, "w", encoding='utf-8') as f:
             for line in data:
