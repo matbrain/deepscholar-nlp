@@ -5,7 +5,7 @@ deepscholarからのデータ取得と，自然言語処理によるテキスト
 `config_sample.json`をコピーして`config.json`を作成し，以下の項目を環境に合わせて書き換える．
 * `API_ENDPOINT`: APIのエンドポイント（`https://xxx.deepscholar.app/api/v1`）
 * `USER_TOKEN`: deepscholarのトークン（settings画面から自分のトークンを確認できる）
-* `WORKSPACE`: ワークスペース名
+* `WORKSPACE`: deepscholarのワークスペース名
 * `WORKING_DIR`: 作業ディレクトリのパス．例えば，`work`という名前のディレクトリを作成して設定する．
 
 `config.json`は任意の名前に変更しても良い．
