@@ -1,0 +1,6 @@
+{
+    "API_ENDPOINT" = "https://trial.deepscholar.app/api/v1",
+    "USER_TOKEN" = "xxxx",
+    "WORKSPACE" = "xxxx",
+    "WORKING_DIR" = "work"
+}
