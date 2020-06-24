@@ -32,8 +32,7 @@ def main():
                     print(f"PDF parse error: {doc_id}")
                     continue
                 lines = [line.rstrip().split("\t") for line in lines]
-                for line in lines:
-                    line.extend(["O", "_"])  # append span-BIO and parent
+                lines = [[line[1], line[3], "O", "_"] for line in lines] # append span-BIO and parent
                 doc_dict[doc_id] = lines
             except:
                 print(f"PDF parse error: {doc_id}")

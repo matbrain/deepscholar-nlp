@@ -36,3 +36,19 @@ $ python download.py config.json
 $ python gen_conll.py config.json
 ```
 `WORKING_DIR`内に`xxx.conll`が生成される．
+
+以下のようなCoNLLファイルが生成される．
+```
+A	_	O	_
+s	S	O	_
+f	_	O	_
+e	_	O	_
+```
+* 1列目: 文字
+* 2列目: 区切り文字
+    * `S`: 直後にスペース文字がある
+    * `N`: 直後に改行がある
+    * `_`: それ以外
+* 3列目: スパンのBIOタグ
+* 4列目: 親ノードのidとプロパティ（関係ラベル）
+    * 親ノードidは，親ノードのスパンの先頭文字を表す
