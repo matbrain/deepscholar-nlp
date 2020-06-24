@@ -22,7 +22,7 @@ $ python download.py config.json
 ```
 
 次に，deepscholarのワークスペース内にある`Categories`タブの`Export`ボタンを押して，設定ファイルをダウンロードする．
-設定ファイルは，`config.json`で設定した`WORKING_DIR`内に，`categories.json`という名前で保存する．
+設定ファイルは，`WORKING_DIR`内に`categories.json`という名前で保存する．
 
 最終的に，`WORKING_DIR`内には，以下のファイルがダウンロードされる．
 * documents.json
@@ -52,6 +52,12 @@ e	_	O	_
 * 3列目: スパンのBIOタグ
 * 4列目: 親ノードのidとプロパティ（関係ラベル）
     * 親ノードidは，親ノードのスパンの先頭文字を表す
+
+## スパンアノテーションの学習
+Comming soon
+
+## 関係アノテーションの学習
+Comming soon
 
 ## License
 MIT
