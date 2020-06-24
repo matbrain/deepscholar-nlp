@@ -21,8 +21,18 @@ $ pip install requests
 $ python download.py config.json
 ```
 
+次に，deepscholarのワークスペース内にある`Categories`タブの`Export`ボタンを押して，設定ファイルをダウンロードする．
+設定ファイルは，`config.json`で設定した`WORKING_DIR`内に，`categories.json`という名前で保存する．
+
+最終的に，`WORKING_DIR`内には，以下のファイルがダウンロードされる．
+* documents.json
+* nodes.json
+* categories.json
+* 各ドキュメントデータ
+
 ## CoNLLフォーマットへ変換
 データをCoNLLフォーマット（自然言語処理で標準的に用いられているフォーマット）へ変換する．
 ```
 $ python gen_conll.py config.json
 ```
+`WORKING_DIR`内に`xxx.conll`が生成される．
