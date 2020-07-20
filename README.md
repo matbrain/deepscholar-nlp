@@ -52,7 +52,8 @@ $ python download.py config.json
 $ python gen_anno.py config.json
 ```
 
-各ドキュメントごとに，`.txt`ファイルと`.anno`ファイルが生成される．  
+各ドキュメントごとに，`.anno`ファイルが生成される．元ドキュメントがPDFファイルの場合は，
+`.txt`ファイルも出力される．  
 `.anno`ファイルは以下のような形式となる．
 
 ```
