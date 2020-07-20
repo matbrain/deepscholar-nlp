@@ -55,6 +55,19 @@ def main():
 
     nodes = json.load(open(WORKING_DIR / 'nodes.json', encoding='utf-8'))
 
+    members = json.load(open(WORKING_DIR / 'members.json', encoding='utf-8'))
+    users = []
+    for member in members:
+        type = member["type"]
+        if type == "user":
+            users.append(member)
+        elif type == "group":
+            u = filter(lambda m: m["type"] == "user", member["members"])
+            users.extend(u)
+    user_dict = {}
+    for user in users:
+        user_dict[user["id"]] = user["name"]
+
     documents = json.load(open(WORKING_DIR / 'documents.json', encoding='utf-8'))
     doc_dict = {}
     for doc in documents:
@@ -93,13 +106,14 @@ def main():
         if 'annotation' in node:
             anno = node['annotation']
             uid = anno['uid']
+            user = user_dict.get(uid, uid)
             if 'startIndex' in anno and 'endIndex' in anno:
                 start = anno['startIndex'] - 1
                 end = anno['endIndex'] - 1
                 start = doc_char2pos[start]
                 end = doc_char2pos[end]
                 # anno_id = f"{start}-{end}-{cat}"
-                anno_json = [str(start), str(end), cat, uid]
+                anno_json = [str(start), str(end), cat, user]
                 doc_anno.append(anno_json)
 
                 if parent_id is not None:

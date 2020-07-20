@@ -28,6 +28,7 @@ $ python download.py config.json
 * documents.json
 * nodes.json
 * categories.json
+* members.json
 * 各ドキュメントデータ（.pdf, .txt）
 
 
@@ -40,21 +41,21 @@ $ python gen_anno.py config.json
 `.anno`ファイルは以下のような形式となる．
 
 ```
-9203	9212	Material	ShdutiEDM0MbbWjrh3eeTvCxBuA3	9639-9649-Process	output
-9203	9212	Material	cW1v1UtR9aZ7F6W0UihWpniRLgi2	9639-9649-Process	output
-9336	9337	Material	cW1v1UtR9aZ7F6W0UihWpniRLgi2	9389-9394-Process	input
-9336	9337	Material	ShdutiEDM0MbbWjrh3eeTvCxBuA3	9389-9394-Process	input
-9346	9347	Material	ShdutiEDM0MbbWjrh3eeTvCxBuA3	9389-9394-Process	input
-9346	9347	Material	cW1v1UtR9aZ7F6W0UihWpniRLgi2	9389-9394-Process	input
-9363	9364	Material	cW1v1UtR9aZ7F6W0UihWpniRLgi2	9389-9394-Process	input
-9363	9364	Material	ShdutiEDM0MbbWjrh3eeTvCxBuA3	9389-9394-Process	input
+9203	9212	Material	userA	9639-9649-Process	output
+9203	9212	Material	userB	9639-9649-Process	output
+9336	9337	Material	userA	9389-9394-Process	input
+9336	9337	Material	userB	9389-9394-Process	input
+9346	9347	Material	userA	9389-9394-Process	input
+9346	9347	Material	userB	9389-9394-Process	input
+9363	9364	Material	userA	9389-9394-Process	input
+9363	9364	Material	userB	9389-9394-Process	input
 ```
 * 1列目: アノテーションの開始文字のインデックス
     * 0始まり
 * 2列目: アノテーションの終了文字のインデックス
     * 0始まり
 * 3列目: アノテーションのカテゴリ
-* 4列目: アノテーションを行ったユーザーID
+* 4列目: アノテーションを行ったユーザー名
 * 5列目: 親ノードのアノテーションID
     * 開始文字，終了文字，カテゴリを連結した文字列
     * 親ノードが存在しなければ出力されない

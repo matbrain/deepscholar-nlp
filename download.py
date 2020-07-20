@@ -50,6 +50,9 @@ def main():
     print("Downloading categories...")
     save_api_response('categories', WORKING_DIR / "categories.json")
 
+    print("Downloading members...")
+    save_api_response('members', WORKING_DIR / "members.json")
+
     print("Downloading documents")
     save_documents()
 
