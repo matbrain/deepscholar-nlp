@@ -38,8 +38,9 @@ def parse_doc(file):
             return {"text": text, "char2pos": char2pos, "anno": []}
     else:
         with open(file, 'rt', encoding='utf-8') as f:
-            lines = f.readlines()
-        return
+            text = f.read()
+        char2pos = [i for i in range(len(text))]
+        return {"text": text, "char2pos": char2pos, "anno": []}
 
 
 def main():
@@ -112,8 +113,7 @@ def main():
                 end = anno['endIndex'] - 1
                 start = doc_char2pos[start]
                 end = doc_char2pos[end]
-                # anno_id = f"{start}-{end}-{cat}"
-                anno_json = [str(start), str(end), cat, user]
+                anno_json = [start, end, cat, user]
                 doc_anno.append(anno_json)
 
                 if parent_id is not None:
@@ -130,14 +130,17 @@ def main():
 
     for doc_id, doc_json in doc_dict.items():
         print(doc_id)
-        text_file = WORKING_DIR / f"{doc_id}.txt"
-        with open(text_file, "w", encoding='utf-8') as f:
-            f.write(doc_json["text"])
-        anno_file = WORKING_DIR / f"{doc_id}.anno"
-        with open(anno_file, "w", encoding='utf-8') as f:
-            for anno in doc_json["anno"]:
-                f.write("\t".join(anno))
-                f.write("\n")
+        if doc_id.endswith(".pdf"):
+            text_file = WORKING_DIR / f"{doc_id}.txt"
+            with open(text_file, "w", encoding='utf-8') as f:
+                f.write(doc_json["text"])
+
+        if len(doc_json["anno"]) > 0:
+            anno_file = WORKING_DIR / f"{doc_id}.anno"
+            with open(anno_file, "w", encoding='utf-8') as f:
+                for anno in doc_json["anno"]:
+                    f.write("\t".join(map(str, anno)))
+                    f.write("\n")
 
 
 if __name__ == '__main__':

@@ -48,6 +48,7 @@ $ python download.py config.json
 
 
 ## アノテーションファイルを出力
+ダウンロードしたファイルを組み合わせて，アノテーションファイルを生成する．
 ```
 $ python gen_anno.py config.json
 ```
