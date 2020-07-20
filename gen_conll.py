@@ -6,9 +6,32 @@ from pathlib import Path
 import unicodedata
 
 
+def parse_doc(doc_id, file):
+    if file.name.endswith(".pdf"):
+        try:
+            with gzip.open(str(file) + ".txt.gz", 'rt', encoding='utf-8') as f:
+                lines = f.readlines()
+            if len(lines) == 0:
+                print(f"PDF parse error: {doc_id}")
+                return
+            else:
+                chars = []
+                delims = []
+                for line in lines:
+                    items = line.rstrip().split("\t")
+                    chars.append(items[1])
+                    delims.append(items[3])
+                return {"filename": file.name, "chars": chars, "delims": delims}
+        except:
+            pass
+    else:
+        with open(file, 'rt', encoding='utf-8') as f:
+            lines = f.readlines()
+        return
+
+
 def main():
-    work_dir = Path(WORKING_DIR)
-    categories = json.load(open(work_dir / 'categories.json', encoding='utf-8'))
+    categories = json.load(open(WORKING_DIR / 'categories.json', encoding='utf-8'))
     cat_dict = {}
     prop_dict = {}
     prop2cat = {}
@@ -17,28 +40,16 @@ def main():
         for prop in cat['properties']:
             prop_dict[prop['id']] = prop['name']
             prop2cat[prop['id']] = cat['id']
-    nodes = json.load(open(work_dir / 'nodes.json', encoding='utf-8'))
+    nodes = json.load(open(WORKING_DIR / 'nodes.json', encoding='utf-8'))
 
-    documents = json.load(open(work_dir / 'documents.json', encoding='utf-8'))
+    documents = json.load(open(WORKING_DIR / 'documents.json', encoding='utf-8'))
     doc_dict = {}
     for doc in documents:
         doc_id = doc['id']
-        file = work_dir / doc_id
-        if file.name.endswith(".pdf"):
-            try:
-                with gzip.open(str(file) + ".txt.gz", 'rt', encoding='utf-8') as f:
-                    lines = f.readlines()
-                if len(lines) == 0:
-                    print(f"PDF parse error: {doc_id}")
-                    continue
-                lines = [line.rstrip().split("\t") for line in lines]
-                lines = [[line[1], line[3], "O", "_"] for line in lines] # append span-BIO and parent
-                doc_dict[doc_id] = lines
-            except:
-                print(f"PDF parse error: {doc_id}")
-                continue
-        else:
-            ()
+        file = WORKING_DIR / doc_id
+        doc_json = parse_doc(file)
+        if doc_json is not None:
+            doc_dict[doc_id] = doc_json
 
     node_dict = {node['id']: node for node in nodes}
     for node in nodes:
@@ -76,7 +87,7 @@ def main():
                     doc[start][-1] = f"{parent_start} {prop}"
 
     for doc_id, data in doc_dict.items():
-        path = Path(work_dir) / f"{doc_id}.conll"
+        path = WORKING_DIR / f"{doc_id}.conll"
         print(doc_id)
         with open(path, "w", encoding='utf-8') as f:
             for line in data:
@@ -87,7 +98,7 @@ def main():
 if __name__ == '__main__':
     with open(sys.argv[1], encoding='utf-8') as f:
         config = json.load(f)
-    WORKING_DIR = config['WORKING_DIR']
+    WORKING_DIR = Path(config['WORKING_DIR'])
     USER_TOKEN = config['USER_TOKEN']
     API_ENDPOINT = config['API_ENDPOINT']
     WORKSPACE = config['WORKSPACE']

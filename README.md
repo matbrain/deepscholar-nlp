@@ -1,10 +1,12 @@
 # deepscholar-nlp
 deepscholarからのデータ取得と，自然言語処理によるテキストマイニングを実行するプログラム
 
+
 ## 環境設定
 `config_sample.json`をコピーして`config.json`を作成し，以下の項目を環境に合わせて書き換える．
 * `API_ENDPOINT`: APIのエンドポイント（`https://xxx.deepscholar.app/api/v1`）
 * `USER_TOKEN`: deepscholarのトークン（settings画面から自分のトークンを確認できる）
+    * トークンは他人に共有しないように注意
 * `WORKSPACE`: deepscholarのワークスペース名
 * `WORKING_DIR`: 作業ディレクトリのパス．例えば，`work`という名前のディレクトリを作成して設定する．
 
@@ -22,53 +24,51 @@ Python 3.8で動作確認済．
 $ python download.py config.json
 ```
 
-次に，deepscholarのワークスペース内にある`Categories`タブの`Export`ボタンを押して，設定ファイルをダウンロードする．
-設定ファイルは，`WORKING_DIR`内に`categories.json`という名前で保存する．
-
-最終的に，`WORKING_DIR`内には，以下のファイルがダウンロードされる．
+`WORKING_DIR`内には，以下のファイルがダウンロードされる．
 * documents.json
 * nodes.json
 * categories.json
-* 各ドキュメントデータ
+* 各ドキュメントデータ（.pdf, .txt）
 
-## CoNLLフォーマットへ変換
-データをCoNLLフォーマット（自然言語処理で標準的に用いられているフォーマット）へ変換する．
-```
-$ python gen_conll.py config.json
-```
-`WORKING_DIR`内に`xxx.conll`が生成される．
 
-以下のようなCoNLLファイルが生成される．
+## アノテーションファイルを出力
 ```
-A	_	O	_
-s	S	O	_
-f	_	B-category	8040 relation
-e	_	I-category	_
-a	_	I-category	_
-t	_	I-category	_
-u	_	I-category	_
-r	_	I-category	_
-e	_	I-category	_
-d	S	E-category	_
-i	_	O	_
-n	_	O	_
-:	N	O	_
-S	_	O	_
+$ python gen_anno.py config.json
 ```
-* 1列目: 文字
-* 2列目: 区切り文字
-    * `S`: 直後にスペース文字がある
-    * `N`: 直後に改行がある
-    * `_`: それ以外
-* 3列目: スパンのBIOEタグ
-* 4列目: 親ノードのidとプロパティ（関係ラベル）
-    * 上記の例だと，`featured`というスパンの親は，8040行目から始まるスパンで，関係ラベルは`relation`ということを表す．
+
+各ドキュメントごとに，`.txt`ファイルと`.anno`ファイルが生成される．  
+`.anno`ファイルは以下のような形式となる．
+
+```
+9203	9212	Material	ShdutiEDM0MbbWjrh3eeTvCxBuA3	9639-9649-Process	output
+9203	9212	Material	cW1v1UtR9aZ7F6W0UihWpniRLgi2	9639-9649-Process	output
+9336	9337	Material	cW1v1UtR9aZ7F6W0UihWpniRLgi2	9389-9394-Process	input
+9336	9337	Material	ShdutiEDM0MbbWjrh3eeTvCxBuA3	9389-9394-Process	input
+9346	9347	Material	ShdutiEDM0MbbWjrh3eeTvCxBuA3	9389-9394-Process	input
+9346	9347	Material	cW1v1UtR9aZ7F6W0UihWpniRLgi2	9389-9394-Process	input
+9363	9364	Material	cW1v1UtR9aZ7F6W0UihWpniRLgi2	9389-9394-Process	input
+9363	9364	Material	ShdutiEDM0MbbWjrh3eeTvCxBuA3	9389-9394-Process	input
+```
+* 1列目: アノテーションの開始文字のインデックス
+    * 0始まり
+* 2列目: アノテーションの終了文字のインデックス
+    * 0始まり
+* 3列目: アノテーションのカテゴリ
+* 4列目: アノテーションを行ったユーザーID
+* 5列目: 親ノードのアノテーションID
+    * 開始文字，終了文字，カテゴリを連結した文字列
+    * 親ノードが存在しなければ出力されない
+* 6列目: プロパティ（親と子の関係ラベル）
+    * 親ノードが存在しなければ出力されない
+
 
 ## スパンアノテーションの学習
 Comming soon
 
+
 ## 関係アノテーションの学習
 Comming soon
+
 
 ## License
 MIT

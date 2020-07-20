@@ -1,7 +1,3 @@
-# DeepScholar API
-# 動作環境：python3
-# 事前準備： pip install requests
-
 import sys
 import os
 import requests
@@ -25,13 +21,8 @@ def save_api_response(apipath, filename):
     return res
 
 
-def main():
-    work_dir = Path(WORKING_DIR)
-    if not work_dir.exists():
-        raise Exception("Error: WORKING_DIR does not exist.")
-
-    print("Downloading documents")
-    docs = save_api_response('documents', work_dir / "documents.json")
+def save_documents():
+    docs = save_api_response('documents', WORKING_DIR / "documents.json")
     docs = json.loads(docs)
     print(f"Number of documents: {len(docs)}")
     for doc in docs:
@@ -40,24 +31,34 @@ def main():
         if doc_id.endswith(".pdf"):
             # save_api_response(f'documents/{doc_id}', work_dir / doc_id)
             filetype = "txt.gz"
-            save_api_response(f'documents/{doc_id}?filetype={filetype}', work_dir / (doc_id + ".txt.gz"))
+            save_api_response(f'documents/{doc_id}?filetype={filetype}', WORKING_DIR / (doc_id + ".txt.gz"))
         else:
-            save_api_response(f'documents/{doc_id}', work_dir / doc_id)
+            save_api_response(f'documents/{doc_id}', WORKING_DIR / doc_id)
         #if filename.exists():
         #    print(f"{filename} exists. Skip downloading")
         #    continue
     print("")
 
+
+def main():
+    if not WORKING_DIR.exists():
+        raise Exception("Error: WORKING_DIR does not exist.")
+
     print("Downloading nodes...")
-    save_api_response('nodes', work_dir / "nodes.json")
+    save_api_response('nodes', WORKING_DIR / "nodes.json")
+
+    print("Downloading categories...")
+    save_api_response('categories', WORKING_DIR / "categories.json")
+
+    print("Downloading documents")
+    save_documents()
 
 
 if __name__ == '__main__':
     with open(sys.argv[1], encoding='utf-8') as f:
         config = json.load(f)
-    WORKING_DIR = config['WORKING_DIR']
+    WORKING_DIR = Path(config['WORKING_DIR'])
     USER_TOKEN = config['USER_TOKEN']
     API_ENDPOINT = config['API_ENDPOINT']
     WORKSPACE = config['WORKSPACE']
     main()
-    print("done")
