@@ -51,8 +51,13 @@ def main():
     for cat in categories:
         cat_dict[cat['id']] = cat['name']
         for prop in cat['properties']:
-            prop_dict[prop['id']] = prop['name']
+            prop_dict[prop['id']] = prop
             prop2cat[prop['id']] = cat['id']
+
+    entities = json.load(open(WORKING_DIR / 'entities.json', encoding='utf-8'))
+    entity_dict = {}
+    for ent in entities:
+        entity_dict[ent['id']] = ent
 
     nodes = json.load(open(WORKING_DIR / 'nodes.json', encoding='utf-8'))
 
@@ -79,7 +84,8 @@ def main():
             doc_dict[doc_id] = doc_json
 
     """
-    node: {"id", "documentId", "propertyId", "parentId", "categoryId", "annotation"}
+    annotation node: {"id", "documentId", "propertyId", "parentId", "categoryId", "annotation"}
+    value node: {"id", "documentId", "propertyId", "parentId", "value"}
     annotation: {"id", "page", "uid", "type": span | rectangle, "value", "documentId", "startIndex", "endIndex"}
     """
     node_dict = {node['id']: node for node in nodes}
@@ -88,22 +94,38 @@ def main():
         if doc_id not in doc_dict:
             continue
         doc = doc_dict[doc_id]
+        doc_char2pos = doc["char2pos"]
 
-        if 'categoryId' not in node:
-            continue
-        cat_id = node['categoryId']
-        cat = cat_dict[cat_id]
+        if 'categoryId' in node:
+            cat_id = node['categoryId']
+            cat = cat_dict[cat_id]
+        else:
+            cat = None
         if 'parentId' in node and 'propertyId' in node:
             parent_id = node['parentId']
             property_id = node['propertyId']
-            prop = prop_dict[property_id]
+            prop = prop_dict[property_id]['name']
+            parent = node_dict[parent_id]
+            parent_start = parent['annotation']['startIndex'] - 1
+            parent_end = parent['annotation']['endIndex'] - 1
+            parent_start = doc_char2pos[parent_start]
+            parent_end = doc_char2pos[parent_end]
+            parent_cat = cat_dict[parent['categoryId']]
+            parent_anno_id = f"{parent_start}-{parent_end}-{parent_cat}"
         else:
             parent_id = None
             property_id = None
-            prop = None
+            prop = "_"
+        if 'value' in node:
+            value = node['value']
+            if property_id is not None and prop_dict[property_id]['type'] == 'entity':
+                if value in entity_dict:
+                    value = entity_dict[value]['title']
+        else:
+            value = "_"
 
-        doc_char2pos = doc["char2pos"]
         doc_anno = doc["anno"]
+        # annotation node
         if 'annotation' in node:
             anno = node['annotation']
             uid = anno['uid']
@@ -113,20 +135,10 @@ def main():
                 end = anno['endIndex'] - 1
                 start = doc_char2pos[start]
                 end = doc_char2pos[end]
-                anno_json = [start, end, cat, user]
-                doc_anno.append(anno_json)
-
-                if parent_id is not None:
-                    parent = node_dict[parent_id]
-                    parent_start = parent['annotation']['startIndex'] - 1
-                    parent_end = parent['annotation']['endIndex'] - 1
-                    parent_start = doc_char2pos[parent_start]
-                    parent_end = doc_char2pos[parent_end]
-                    parent_cat = cat_dict[parent['categoryId']]
-                    parent_anno_id = f"{parent_start}-{parent_end}-{parent_cat}"
-                    anno_json.append(parent_anno_id)
-                    anno_json.append(prop)
-            doc_anno.sort(key=lambda x: x[0])
+                doc_anno.append([start, end, cat, user, parent_anno_id, prop, value])
+        # value node
+        elif value is not None:
+            doc_anno.append([-1, -1, '_', '_', parent_anno_id, prop, value])
 
     for doc_id, doc_json in doc_dict.items():
         print(doc_id)
@@ -137,6 +149,7 @@ def main():
 
         if len(doc_json["anno"]) > 0:
             anno_file = WORKING_DIR / f"{doc_id}.anno"
+            doc_json["anno"].sort(key=lambda x: x[0])
             with open(anno_file, "w", encoding='utf-8') as f:
                 for anno in doc_json["anno"]:
                     f.write("\t".join(map(str, anno)))

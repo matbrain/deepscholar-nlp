@@ -26,6 +26,7 @@ $ python download.py config.json
 
 `WORKING_DIR`内には，以下のファイルがダウンロードされる．
 * documents.json
+* entities.json
 * nodes.json
 * categories.json
 * members.json
@@ -58,19 +59,24 @@ $ python gen_anno.py config.json
 `.anno`ファイルは以下のような形式となる．
 
 ```
-9203	9212	Material	userA	9639-9649-Process	output
-9203	9212	Material	userB	9639-9649-Process	output
-9336	9337	Material	userA	9389-9394-Process	input
-9336	9337	Material	userB	9389-9394-Process	input
-9346	9347	Material	userA	9389-9394-Process	input
-9346	9347	Material	userB	9389-9394-Process	input
-9363	9364	Material	userA	9389-9394-Process	input
-9363	9364	Material	userB	9389-9394-Process	input
+-1	-1	_	_	9389-9394-Process	entity	Seal
+-1	-1	_	_	9441-9446-Process	entity	Heat/Press
+-1	-1	_	_	9389-9394-Process	entity	Seal
+9203	9212	Material	userA	9639-9649-Process	output	_
+9203	9212	Material	userB	9639-9649-Process	output	_
+9336	9337	Material	userA	9389-9394-Process	input	_
+9336	9337	Material	userB	9389-9394-Process	input	_
+9346	9347	Material	userA	9389-9394-Process	input	_
+9346	9347	Material	userB	9389-9394-Process	input	_
+9363	9364	Material	userA	9389-9394-Process	input	_
+9363	9364	Material	userB	9389-9394-Process	input	_
 ```
 * 1列目: アノテーションの開始文字のインデックス
     * 0始まりで，スペースや改行文字も１文字にカウント
+    * -1のときは，アノテーションではない（string, float, entityのいずれか）
 * 2列目: アノテーションの終了文字のインデックス
     * 0始まりで，スペースや改行文字も１文字にカウント
+    * -1のときは，アノテーションではない（string, float, entityのいずれか）
 * 3列目: アノテーションのカテゴリ
 * 4列目: アノテーションを行ったユーザー名
     * ユーザーが存在しない場合はユーザー
@@ -79,6 +85,8 @@ $ python gen_anno.py config.json
     * 親ノードが存在しなければ出力されない
 * 6列目: プロパティ（親と子の関係ラベル）
     * 親ノードが存在しなければ出力されない
+* 7列目: プロパティ（親と子の関係ラベル）
+    * プロパティの値（string, float, entityの場合のみ有効）
 
 
 ## License

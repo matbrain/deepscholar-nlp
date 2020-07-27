@@ -56,6 +56,9 @@ def main():
     print("Downloading documents")
     save_documents()
 
+    print("Downloading entities")
+    save_api_response('entities', WORKING_DIR / "entities.json")
+
 
 if __name__ == '__main__':
     with open(sys.argv[1], encoding='utf-8') as f:
