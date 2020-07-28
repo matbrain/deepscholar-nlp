@@ -32,8 +32,7 @@ def save_documents():
             # save_api_response(f'documents/{doc_id}', work_dir / doc_id)
             filetype = "txt.gz"
             save_api_response(f'documents/{doc_id}?filetype={filetype}', WORKING_DIR / (doc_id + ".txt.gz"))
-        else:
-            save_api_response(f'documents/{doc_id}', WORKING_DIR / doc_id)
+        save_api_response(f'documents/{doc_id}', WORKING_DIR / doc_id)
         #if filename.exists():
         #    print(f"{filename} exists. Skip downloading")
         #    continue
