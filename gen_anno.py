@@ -116,6 +116,7 @@ def main():
             parent_id = None
             property_id = None
             prop = "_"
+            parent_anno_id = "_"
         if 'value' in node:
             value = node['value']
             if property_id is not None and prop_dict[property_id]['type'] == 'entity':
