@@ -1,30 +1,30 @@
 # deepscholar-nlp
-deepscholarからのデータ取得と，自然言語処理によるテキストマイニングを実行するプログラム
+deepscholar APIを用いてデータ取得を行うプログラムです．
 
 
 ## 環境設定
-`config_sample.json`をコピーして`config.json`を作成し，以下の項目を環境に合わせて書き換える．
+`config_sample.json`をコピーして`config.json`を作成し，以下の項目を環境に合わせて書き換えます．
 * `API_ENDPOINT`: APIのエンドポイント（`https://xxx.deepscholar.app/api/v1`）
-* `USER_TOKEN`: deepscholarのトークン（settings画面から自分のトークンを確認できる）
-    * トークンは他人に共有しないように注意
+* `USER_TOKEN`: deepscholarのAPIトークン（画面右上のユーザー名 → Settings → APIから自分のトークンを確認できます）
+    * トークンは他人に共有しないように注意してください．
 * `WORKSPACE`: deepscholarのワークスペース名
-* `WORKING_DIR`: 作業ディレクトリのパス．例えば，`work`という名前のディレクトリを作成して設定する．
+* `WORKING_DIR`: 作業ディレクトリのパス．例えば，`work`という名前のディレクトリを作成して，そのパスを設定します．
 
-`config.json`は任意の名前に変更しても良い．
+`config.json`は任意の名前に変更しても動作します．
 
-python 3.xをインストールして，`requests`パッケージをインストールする．
+python 3.xをインストールして，`requests`パッケージをインストールします．
 ```
 $ pip install requests
 ```
-Python 3.8で動作確認済．
+Python 3.8で動作確認済です．
 
 ## データのダウンロード
-ドキュメント，アノテーション，設定データを作業ディレクトリにダウンロードする．
+ドキュメント，アノテーション，各種設定データを作業ディレクトリにダウンロードします．
 ```
 $ python download.py config.json
 ```
 
-`WORKING_DIR`内には，以下のファイルがダウンロードされる．
+`WORKING_DIR`内には，以下のファイルがダウンロードされます．
 * documents.json
 * entities.json
 * nodes.json
@@ -49,14 +49,16 @@ $ python download.py config.json
 
 
 ## アノテーションファイルを出力
-ダウンロードしたファイルを組み合わせて，アノテーションファイルを生成する．
+ダウンロードしたファイルを組み合わせて，アノテーションファイルを生成します．
+必ず`データのダウンロード`を実行した後に作業を行ってください．
+
 ```
 $ python gen_anno.py config.json
 ```
 
-各ドキュメントごとに，`.anno`ファイルが生成される．元ドキュメントがPDFファイルの場合は，
-`.txt`ファイルも出力される．  
-`.anno`ファイルは以下のような形式となる．
+各ドキュメントごとに，`.anno`ファイルが生成されます．ドキュメントがPDFファイルの場合は，`.txt`ファイルも出力されます．
+
+`.anno`ファイルは以下のような形式となります．
 
 ```
 -1	-1	_	_	9389-9394-Process	entity	Seal
