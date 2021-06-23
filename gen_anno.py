@@ -101,7 +101,7 @@ def main():
             cat = cat_dict[cat_id]
         else:
             cat = None
-        if 'parentId' in node and 'propertyId' in node:
+        if 'parentId' in node and 'propertyId' in node and node['propertyId'] in prop_dict:
             parent_id = node['parentId']
             property_id = node['propertyId']
             prop = prop_dict[property_id]['name']
